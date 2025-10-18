@@ -10,7 +10,7 @@ class DeclarativeContainer(ABC):
         for name, provider in self.__dict__.items():
             if not isinstance(provider, providers.Provider):
                 continue
-            providers_dict[name] = provider
+            providers_dict[name] = provider()
         self.providers = providers_dict
 
     def __new__(cls, *args, **kwargs):
