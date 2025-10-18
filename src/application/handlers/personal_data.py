@@ -12,19 +12,19 @@ logger = logging.getLogger(__name__)
 
 
 @router.callback_query(F.data == "pd_agree")
-async def pd_agree(query: types.CallbackQuery, states: FSMContext):
+async def pd_agree(query: types.CallbackQuery, state: FSMContext):
     await query.message.reply("Введите ваше ФИО")
-    await states.set_state(RegistrationStates.fio)
+    await state.set_state(RegistrationStates.fio)
 
 
 @router.callback_query(F.data == "pd_disagree")
-async def pd_disagree(query: types.CallbackQuery, states: FSMContext):
+async def pd_disagree(query: types.CallbackQuery, state: FSMContext):
     await query.message.reply("Напишите любое сообщение для перезапуска разговора")
-    await states.clear()
+    await state.clear()
 
 
-@router.callback_query(F.data == "pd_disagree")
-async def pd_disagree(query: types.CallbackQuery, states: FSMContext):
+@router.callback_query(F.data == "pd_read")
+async def pd_disagree(query: types.CallbackQuery, state: FSMContext):
     await query.message.reply_document(document=types.FSInputFile("docs/Согласие.docx"))
     await query.message.reply(
         "Для начала дайте согласие на обработку персональных данных",
