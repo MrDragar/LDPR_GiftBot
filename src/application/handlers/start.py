@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @router.message()
 @start_command_router.message(filters.CommandStart())
 async def start(message: types.Message, user_service: IUserService, state: FSMContext):
-    if user_service.is_user_exists(message.from_user.id):
+    if await user_service.is_user_exists(message.from_user.id):
         logging.debug(f"User {message.from_user.id} already exists")
         return await message.reply("Вы уже успешно зарегистрировались")
 
