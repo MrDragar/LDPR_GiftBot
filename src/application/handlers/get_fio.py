@@ -15,3 +15,5 @@ async def get_fio(message: types.Message, state: FSMContext):
     fio = message.text
     logger.debug(f"Got fio {fio}")
     await state.update_data(fio=fio)
+    await state.set_state(RegistrationStates.phone)
+    await message.reply("Введите ваш номер телефона")
