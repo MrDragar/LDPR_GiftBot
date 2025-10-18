@@ -16,10 +16,11 @@ class UserRepository(IUserRepository):
 
     async def create_user(self, user: User) -> User:
         session = self.__uow.get_session()
-        user_orm = UserORM.from_domain(user)
+        user_orm = await UserORM.from_domain(user)
         session.add(user_orm)
         await session.commit()
-        return user_orm.to_domain()
+        await session.refresh(user_orm)
+        return await user_orm.to_domain()
 
     async def get_user(self, user_id: int) -> User:
         session = self.__uow.get_session()
@@ -27,4 +28,4 @@ class UserRepository(IUserRepository):
         user_orm = await session.scalar(stmt)
         if user_orm is None:
             raise exceptions.UserNotFoundError()
-        return user_orm.to_domain()
+        return await user_orm.to_domain()

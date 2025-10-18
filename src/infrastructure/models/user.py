@@ -12,7 +12,7 @@ class UserORM(Base):
     fio: Mapped[str] = mapped_column("fio", nullable=False)
     phone_number: Mapped[str] = mapped_column("phone_number", nullable=False)
 
-    def to_domain(self) -> User:
+    async def to_domain(self) -> User:
         return User(
             id=self.id,
             username=self.username,
@@ -21,7 +21,7 @@ class UserORM(Base):
         )
 
     @classmethod
-    def from_domain(cls, user: User) -> 'UserORM':
+    async def from_domain(cls, user: User) -> 'UserORM':
         return cls(
             id=user.id,
             username=user.username,
