@@ -1,16 +1,13 @@
 from abc import ABC, abstractmethod
 
-from src.domain.entities.user import Language, User
+from src.domain.entities.user import User
 
 
 class IUserService(ABC):
     @abstractmethod
     async def create_user(
-            self, id: int, username: str | None,
-            fullname: str, language: Language
+            self, user_id: int, username: str | None,
+            fio: str, phone_number: str
     ) -> User:
         ...
 
-    @abstractmethod
-    async def get_user_language(self, id: int) -> Language:
-        ...

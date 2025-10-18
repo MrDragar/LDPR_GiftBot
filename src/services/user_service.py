@@ -1,6 +1,5 @@
-from src.domain.entities.user import Language, User
+from src.domain.entities.user import User
 from src.domain.interfaces import IUnitOfWork, IUserRepository
-from src.domain import exceptions
 from src.services.interfaces import IUserService
 
 
@@ -14,19 +13,12 @@ class UserService(IUserService):
 
     async def create_user(
             self, user_id: int, username: str | None,
-            fullname: str, language: Language
+            fio: str, phone_number: str
     ) -> User:
         user = User(
-            id=user_id, username=username, fullname=fullname, language=language
+            id=user_id, username=username, phone_number=phone_number, fio=fio
         )
         async with self.__uow.atomic():
             await self.__user_repo.create_user(user)
         return user
 
-    async def get_user_language(self, user_id: int) -> Language:
-        try:
-            async with self.__uow.atomic():
-                user = await self.__user_repo.get_user(user_id=user_id)
-        except exceptions.UserNotFoundError:
-            return Language.ENGLISH
-        return user.language

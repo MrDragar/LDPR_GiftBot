@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.domain.entities.user import Language, User
+from src.domain.entities.user import User
 from src.infrastructure.database import Base
 
 
@@ -9,15 +9,15 @@ class UserORM(Base):
 
     id: Mapped[int] = mapped_column("id", primary_key=True)
     username: Mapped[str] = mapped_column("username", nullable=True)
-    fullname: Mapped[str] = mapped_column("fullname")
-    language: Mapped[Language] = mapped_column("language", default=Language.ENGLISH)
+    fio: Mapped[str] = mapped_column("fio", nullable=False)
+    phone_number: Mapped[str] = mapped_column("phone_number", nullable=False)
 
     def to_domain(self) -> User:
         return User(
             id=self.id,
             username=self.username,
-            fullname=self.fullname,
-            language=self.language
+            fio=self.fio,
+            phone_number=self.phone_number
         )
 
     @classmethod
@@ -25,6 +25,6 @@ class UserORM(Base):
         return cls(
             id=user.id,
             username=user.username,
-            fullname=user.fullname,
-            language=user.language
+            fio=user.fio,
+            phone_number=user.phone_number
         )
