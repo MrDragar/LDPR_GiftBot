@@ -9,6 +9,12 @@ class DeclarativeContainer(ABC):
         providers_dict = {}
         for name, provider in self.__dict__.items():
             if not isinstance(provider, providers.Provider):
-                raise TypeError(f"Container contains fields which are not a Provider {provider} {name}")
+                continue
             providers_dict[name] = provider
         self.providers = providers_dict
+
+    def __new__(cls, *args, **kwargs):
+        obj = super().__new__(cls, *args, **kwargs)
+        for key, value in vars(cls).items():
+            obj.__dict__[key] = value
+        return obj

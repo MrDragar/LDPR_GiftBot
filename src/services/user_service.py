@@ -1,4 +1,5 @@
 from src.domain.entities.user import User
+from src.domain.exceptions import UserNotFoundError
 from src.domain.interfaces import IUnitOfWork, IUserRepository
 from src.services.interfaces import IUserService
 
@@ -22,3 +23,12 @@ class UserService(IUserService):
             await self.__user_repo.create_user(user)
         return user
 
+    async def is_user_exists(self, user_id: int) -> bool:
+        async with self.__uow.atomic():
+            try:
+                user = self.__user_repo.get_user(user_id)
+            except UserNotFoundError:
+                return False
+            except Exception:
+                raise
+            return True

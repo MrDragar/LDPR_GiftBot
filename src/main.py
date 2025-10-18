@@ -17,12 +17,15 @@ async def main():
     )
     bot = Bot(token=config.API_TOKEN)
     container = Container()
+    logging.debug(f"{vars(container)}, {container.user_service}")
+    logging.debug("")
     await container.database().create_database()
     di_middleware = DIProvideMiddleware(container)
     dp = Dispatcher()
-    dp.update.register(di_middleware)
+    dp.update.middleware(di_middleware)
     dp.include_router(root_router)
-    await bot.delete_webhook()
+    # await bot.delete_webhook()
+    logging.debug("Starting bot")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
