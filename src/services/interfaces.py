@@ -14,3 +14,7 @@ class IUserService(ABC):
     @abstractmethod
     async def is_user_exists(self, user_id: int) -> bool:
         ...
+
+    @abstractmethod
+    async def validate_phone(self, phone_number: str) -> str:
+        ...

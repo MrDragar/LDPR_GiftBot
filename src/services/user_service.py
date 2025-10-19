@@ -1,5 +1,6 @@
 from src.domain.entities.user import User
-from src.domain.exceptions import UserNotFoundError
+from src.domain.exceptions import UserNotFoundError, PhoneBadFormatError, \
+    PhoneAlreadyExistsError, PhoneBadCountryError
 from src.domain.interfaces import IUnitOfWork, IUserRepository
 from src.services.interfaces import IUserService
 
@@ -32,3 +33,23 @@ class UserService(IUserService):
             except Exception:
                 raise
             return True
+
+    async def validate_phone(self, phone_number: str) -> str:
+        phone_number = phone_number.strip()
+        if phone_number.startswith("+7"):
+            phone_number = "8" + phone_number[2:]
+        digits = []
+        for symbol in phone_number:
+            if symbol.isdigit():
+                digits.append(symbol)
+        phone_number = "".join(digits)
+        if len(phone_number) != 11:
+            raise PhoneBadFormatError
+        if not phone_number.startswith("8"):
+            raise PhoneBadCountryError
+
+        async with self.__uow.atomic():
+            is_existing = await self.__user_repo.is_phone_number_existing(phone_number)
+            if is_existing:
+                raise PhoneAlreadyExistsError
+        return phone_number

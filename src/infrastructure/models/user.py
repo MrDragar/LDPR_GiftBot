@@ -10,7 +10,7 @@ class UserORM(Base):
     id: Mapped[int] = mapped_column("id", primary_key=True)
     username: Mapped[str] = mapped_column("username", nullable=True)
     fio: Mapped[str] = mapped_column("fio", nullable=False)
-    phone_number: Mapped[str] = mapped_column("phone_number", nullable=False)
+    phone_number: Mapped[str] = mapped_column("phone_number", nullable=False, unique=True)
 
     async def to_domain(self) -> User:
         return User(

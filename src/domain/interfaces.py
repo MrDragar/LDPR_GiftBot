@@ -19,3 +19,6 @@ class IUserRepository(ABC):
     async def get_user(self, user_id: int) -> User:
         ...
 
+    @abstractmethod
+    async def is_phone_number_existing(self, phone_number: str) -> bool:
+        ...

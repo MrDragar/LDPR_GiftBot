@@ -1,3 +1,5 @@
+import logging
+
 from sqlalchemy import select
 
 from src.domain.entities import User
@@ -6,6 +8,8 @@ from src.domain import exceptions
 
 from ..interfaces import IDatabaseUnitOfWork
 from ..models.user import UserORM
+
+logger = logging.getLogger(__name__)
 
 
 class UserRepository(IUserRepository):
@@ -29,3 +33,10 @@ class UserRepository(IUserRepository):
         if user_orm is None:
             raise exceptions.UserNotFoundError()
         return await user_orm.to_domain()
+
+    async def is_phone_number_existing(self, phone_number: str) -> bool:
+        session = self.__uow.get_session()
+        stmt = select(UserORM).where(UserORM.phone_number == phone_number)
+        user_orm = await session.scalar(stmt)
+        logger.debug(user_orm)
+        return user_orm is not None
