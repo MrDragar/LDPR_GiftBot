@@ -3,7 +3,6 @@ import logging
 from aiogram import Router, types
 from aiogram.fsm.context import FSMContext
 
-from src.services.interfaces import IUserService
 from src.application.states import RegistrationStates
 
 router = Router(name=__name__)

@@ -1,5 +1,5 @@
 from aiogram.types import InlineKeyboardMarkup
-from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
 def get_personal_data_keyboard() -> InlineKeyboardMarkup:

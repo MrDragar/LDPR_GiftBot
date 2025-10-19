@@ -1,6 +1,5 @@
-from .user_service import UserService
 from . import interfaces
-
+from .user_service import UserService
 
 __all__ = [
     'UserService',

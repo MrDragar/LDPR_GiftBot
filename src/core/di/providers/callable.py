@@ -1,5 +1,6 @@
-from .provider import Provider, T
 from typing import Callable as _Callable, Any
+
+from .provider import Provider, T
 
 
 class Callable(Provider[T]):

@@ -2,10 +2,9 @@ import logging
 
 from sqlalchemy import select
 
+from src.domain import exceptions
 from src.domain.entities import User
 from src.domain.interfaces import IUserRepository
-from src.domain import exceptions
-
 from ..interfaces import IDatabaseUnitOfWork
 from ..models.user import UserORM
 

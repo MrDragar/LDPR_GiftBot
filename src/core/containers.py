@@ -1,10 +1,8 @@
 from src.core.di import DeclarativeContainer, providers
 from src.domain.interfaces import IUnitOfWork, IUserRepository
-
 from src.infrastructure import Database, UnitOfWork
-from src.infrastructure.repositories import UserRepository
 from src.infrastructure.interfaces import IDatabase
-
+from src.infrastructure.repositories import UserRepository
 from src.services import UserService
 from src.services.interfaces import IUserService
 

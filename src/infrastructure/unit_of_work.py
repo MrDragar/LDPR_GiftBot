@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from contextvars import ContextVar
-from typing import AsyncGenerator, Never
+from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import AsyncSession
 

@@ -4,8 +4,8 @@ from aiogram import Router, types
 from aiogram.fsm.context import FSMContext
 
 from src.application.states import RegistrationStates
-from src.services.interfaces import IUserService
 from src.domain import exceptions
+from src.services.interfaces import IUserService
 
 router = Router(name=__name__)
 logger = logging.getLogger(__name__)

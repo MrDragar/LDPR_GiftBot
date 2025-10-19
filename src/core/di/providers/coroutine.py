@@ -1,5 +1,4 @@
-from typing import Callable, Coroutine as _Coroutine, Any, Awaitable
-import asyncio
+from typing import Callable, Any, Awaitable
 
 from .provider import Provider, T
 
