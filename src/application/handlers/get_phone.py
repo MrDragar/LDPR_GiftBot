@@ -29,4 +29,4 @@ async def get_phone_number(message: types.Message, state: FSMContext, user_servi
 
     await user_service.create_user(message.from_user.id, message.from_user.username, fio, phone)
     await state.clear()
-    await message.reply("Поздравляем, вы успешно зарегистрированы. Переходите по ссылке https://депутатлдпр.рф для получения подарка")
+    await message.reply("Поздравляем, вы успешно зарегистрированы. Переходите по ссылке https://ссылка.пример для получения подарка")
