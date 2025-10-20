@@ -29,4 +29,7 @@ async def get_phone_number(message: types.Message, state: FSMContext, user_servi
 
     await user_service.create_user(message.from_user.id, message.from_user.username, fio, phone)
     await state.clear()
-    await message.reply("Поздравляем, вы успешно зарегистрированы. Переходите по ссылке https://ссылка.пример для получения подарка")
+    await message.reply(
+        "Поздравляем, вы успешно зарегистрированы. Переходите <a href='https://1pz21m6c-3000.euw.devtunnels.ms/'>по ссылке</a> для получения подарка",
+        parse_mode="HTML"
+    )
