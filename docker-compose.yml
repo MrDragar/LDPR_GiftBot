@@ -1,0 +1,17 @@
+services:
+  bot:
+    command: python3 -m src.main
+    build: ./
+    volumes:
+      - ./src:/app/src
+      - ./logs:/app/logs
+      - ./docs:/app/docs
+      - ./db.sqlite3:/app/db.sqlite3
+    env_file:
+      - .env
+    environment:
+      API_TOKEN: ${API_TOKEN}
+      LOG_LEVEL: ${LOG_LEVEL}
+      LOG_FILE: ${LOG_FILE}
+      LOG_FORMAT: ${LOG_FORMAT}
+    restart: always
