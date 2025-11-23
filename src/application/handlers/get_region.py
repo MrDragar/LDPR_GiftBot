@@ -64,3 +64,7 @@ async def region_by_button(query: types.CallbackQuery,
         f"По указанному адресу вы сможете забрать свой подарок, а также получить полезную информацию.",
         parse_mode="HTML"
     )
+    await query.message.answer(
+        """Пока вы ждёте, предлагаем провести время с пользой — на нашем <a href='https://https://blogs.mtdv.me/UF2LghRhZp'>сайте</a> 
+вы найдёте развивающие материалы для детей, доступные для мгновенного скачивания."""
+    )
