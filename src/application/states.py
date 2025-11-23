@@ -5,3 +5,5 @@ class RegistrationStates(StatesGroup):
     personal_data = State()
     fio = State()
     phone = State()
+    region_by_text = State()
+    region_by_button = State()

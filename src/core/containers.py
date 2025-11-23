@@ -1,8 +1,8 @@
 from src.core.di import DeclarativeContainer, providers
-from src.domain.interfaces import IUnitOfWork, IUserRepository
+from src.domain.interfaces import IUnitOfWork, IUserRepository, IStringSorterRepository
 from src.infrastructure import Database, UnitOfWork
 from src.infrastructure.interfaces import IDatabase
-from src.infrastructure.repositories import UserRepository
+from src.infrastructure.repositories import UserRepository, LevenshteinRepository, FuzzywuzzyRepository
 from src.services import UserService
 from src.services.interfaces import IUserService
 
@@ -17,6 +17,9 @@ class Container(DeclarativeContainer):
     user_repository: providers.Factory[IUserRepository] = providers.Factory(
         UserRepository, uow=uow
     )
+    string_sorter: providers.Factory[IStringSorterRepository] = providers.Factory(
+        FuzzywuzzyRepository
+    )
     user_service: providers.Factory[IUserService] = providers.Factory(
-        UserService, user_repo=user_repository, uow=uow
+        UserService, user_repo=user_repository, uow=uow, string_sorter_repo=string_sorter
     )

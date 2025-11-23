@@ -22,3 +22,9 @@ class IUserRepository(ABC):
     @abstractmethod
     async def is_phone_number_existing(self, phone_number: str) -> bool:
         ...
+
+
+class IStringSorterRepository(ABC):
+    @abstractmethod
+    async def sort_by_similarity(self, target: str, string_list: list[str]) -> list[str]:
+        ...

@@ -7,3 +7,4 @@ class User:
     username: str | None
     fio: str
     phone_number: str
+    region: str

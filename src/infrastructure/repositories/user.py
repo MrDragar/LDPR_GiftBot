@@ -26,11 +26,14 @@ class UserRepository(IUserRepository):
         return await user_orm.to_domain()
 
     async def get_user(self, user_id: int) -> User:
+        logger.debug(f"Getting user by id={user_id}")
         session = self.__uow.get_session()
         stmt = select(UserORM).where(UserORM.id == user_id)
         user_orm = await session.scalar(stmt)
         if user_orm is None:
+            logger.debug(f"Not found user with id={user_id}")
             raise exceptions.UserNotFoundError()
+        logger.debug(f"Found user {user_orm.to_domain()}")
         return await user_orm.to_domain()
 
     async def is_phone_number_existing(self, phone_number: str) -> bool:

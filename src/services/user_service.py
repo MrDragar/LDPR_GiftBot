@@ -1,33 +1,52 @@
+import logging
+
 from src.domain.entities.user import User
 from src.domain.exceptions import UserNotFoundError, PhoneBadFormatError, \
     PhoneAlreadyExistsError, PhoneBadCountryError
-from src.domain.interfaces import IUnitOfWork, IUserRepository
+from src.domain.interfaces import IUnitOfWork, IUserRepository, \
+    IStringSorterRepository
 from src.services.interfaces import IUserService
 
 
 class UserService(IUserService):
     __user_repo: IUserRepository
+    __string_sorter_repo: IStringSorterRepository
     __uow: IUnitOfWork
+    __region_addresses = {
+            'Республика Адыгея (Адыгея)': 'адрес_тестовый', 'Республика Алтай': 'адрес_тестовый', 'Республика Башкортостан': 'адрес_тестовый', 'Республика Бурятия': 'адрес_тестовый', 'Республика Дагестан': 'адрес_тестовый', 'Донецкая Народная Республика': 'адрес_тестовый', 'Республика Ингушетия': 'адрес_тестовый', 'Кабардино-Балкарская Республика': 'адрес_тестовый', 'Республика Калмыкия': 'адрес_тестовый', 'Карачаево-Черкесская Республика': 'адрес_тестовый', 'Республика Карелия': 'адрес_тестовый', 'Республика Коми': 'адрес_тестовый', 'Республика Крым': 'адрес_тестовый', 'Луганская Народная Республика': 'адрес_тестовый', 'Республика Марий Эл': 'адрес_тестовый', 'Республика Мордовия': 'адрес_тестовый', 'Республика Саха (Якутия)': 'адрес_тестовый', 'Республика Северная Осетия - Алания': 'адрес_тестовый', 'Республика Татарстан (Татарстан)': 'адрес_тестовый', 'Республика Тыва': 'адрес_тестовый', 'Удмуртская Республика': 'адрес_тестовый', 'Республика Хакасия': 'адрес_тестовый', 'Чеченская Республика': 'адрес_тестовый', 'Чувашская Республика - Чувашия': 'адрес_тестовый', 'Алтайский край': 'адрес_тестовый', 'Забайкальский край': 'адрес_тестовый', 'Камчатский край': 'адрес_тестовый', 'Краснодарский край': 'адрес_тестовый', 'Красноярский край': 'адрес_тестовый', 'Пермский край': 'адрес_тестовый', 'Приморский край': 'адрес_тестовый', 'Ставропольский край': 'адрес_тестовый', 'Хабаровский край': 'адрес_тестовый', 'Амурская область': 'адрес_тестовый', 'Архангельская область': 'адрес_тестовый', 'Астраханская область': 'адрес_тестовый', 'Белгородская область': 'адрес_тестовый', 'Брянская область': 'адрес_тестовый', 'Владимирская область': 'адрес_тестовый', 'Волгоградская область': 'адрес_тестовый', 'Вологодская область': 'адрес_тестовый', 'Воронежская область': 'адрес_тестовый', 'Запорожская область': 'адрес_тестовый', 'Ивановская область': 'адрес_тестовый', 'Иркутская область': 'адрес_тестовый', 'Калининградская область': 'адрес_тестовый', 'Калужская область': 'адрес_тестовый', 'Кемеровская область - Кузбасс': 'адрес_тестовый', 'Кировская область': 'адрес_тестовый', 'Костромская область': 'адрес_тестовый', 'Курганская область': 'адрес_тестовый', 'Курская область': 'адрес_тестовый', 'Ленинградская область': 'адрес_тестовый', 'Липецкая область': 'адрес_тестовый', 'Магаданская область': 'адрес_тестовый', 'Московская область': 'адрес_тестовый', 'Мурманская область': 'адрес_тестовый', 'Нижегородская область': 'адрес_тестовый', 'Новгородская область': 'адрес_тестовый', 'Новосибирская область': 'адрес_тестовый', 'Омская область': 'адрес_тестовый', 'Оренбургская область': 'адрес_тестовый', 'Орловская область': 'адрес_тестовый', 'Пензенская область': 'адрес_тестовый', 'Псковская область': 'адрес_тестовый', 'Ростовская область': 'адрес_тестовый', 'Рязанская область': 'адрес_тестовый', 'Самарская область': 'адрес_тестовый', 'Саратовская область': 'адрес_тестовый', 'Сахалинская область': 'адрес_тестовый', 'Свердловская область': 'адрес_тестовый', 'Смоленская область': 'адрес_тестовый', 'Тамбовская область': 'адрес_тестовый', 'Тверская область': 'адрес_тестовый', 'Томская область': 'адрес_тестовый', 'Тульская область': 'адрес_тестовый', 'Тюменская область': 'адрес_тестовый', 'Ульяновская область': 'адрес_тестовый', 'Херсонская область': 'адрес_тестовый', 'Челябинская область': 'адрес_тестовый', 'Ярославская область': 'адрес_тестовый', 'Москва': 'адрес_тестовый', 'Санкт-Петербург': 'адрес_тестовый', 'Севастополь - города федерального значения': 'адрес_тестовый', 'Еврейская автономная область': 'адрес_тестовый', 'Ненецкий автономный округ': 'адрес_тестовый', 'Ханты-Мансийский автономный округ - Югра': 'адрес_тестовый', 'Чукотский автономный округ': 'адрес_тестовый', 'Ямало-Ненецкий автономный округ': 'адрес_тестовый'
+    }
+    __MAX_REGION_SUGGESTIONS = 10
 
-    def __init__(self, user_repo: IUserRepository, uow: IUnitOfWork):
+    def __init__(self, user_repo: IUserRepository, uow: IUnitOfWork, string_sorter_repo: IStringSorterRepository):
         self.__user_repo = user_repo
         self.__uow = uow
+        self.__string_sorter_repo = string_sorter_repo
 
     async def create_user(
             self, user_id: int, username: str | None,
-            fio: str, phone_number: str
+            fio: str, phone_number: str, region: str
     ) -> User:
         user = User(
-            id=user_id, username=username, phone_number=phone_number, fio=fio
+            id=user_id, username=username, phone_number=phone_number, fio=fio, region=region
         )
         async with self.__uow.atomic():
             await self.__user_repo.create_user(user)
         return user
+    
+    async def get_user_region(self, user_id: int) -> str:
+        async with self.__uow.atomic():
+            try:
+                user = await self.__user_repo.get_user(int(user_id))
+            except UserNotFoundError:
+                raise
+            except Exception:
+                raise
+            return user.region
 
     async def is_user_exists(self, user_id: int) -> bool:
         async with self.__uow.atomic():
             try:
-                user = await self.__user_repo.get_user(user_id)
+                user = await self.__user_repo.get_user(int(user_id))
             except UserNotFoundError:
                 return False
             except Exception:
@@ -53,3 +72,12 @@ class UserService(IUserService):
             if is_existing:
                 raise PhoneAlreadyExistsError
         return phone_number
+
+    async def get_similar_regions(self, region: str) -> list[str]:
+        sorted_regions = await self.__string_sorter_repo.sort_by_similarity(region, list(self.__region_addresses.keys()))
+        return sorted_regions[:self.__MAX_REGION_SUGGESTIONS]
+
+    async def get_region_address(self, region: str) -> str:
+        if region not in self.__region_addresses:
+            raise Exception("Not found a region")
+        return self.__region_addresses.get(region)
