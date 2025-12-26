@@ -15,14 +15,18 @@ logger = logging.getLogger(__name__)
 
 @router.message()
 @start_command_router.message(filters.CommandStart())
-async def start(message: types.Message, user_service: IUserService, state: FSMContext):
+async def start(message: types.Message, user_service: IUserService,
+                state: FSMContext):
     if await user_service.is_user_exists(message.from_user.id):
-        address = await user_service.get_region_address(await user_service.get_user_region(message.from_user.id))
+        address = await user_service.get_region_address(
+            await user_service.get_user_region(message.from_user.id))
         logging.debug(f"User {message.from_user.id} already exists")
-        return await message.reply(f"Вы уже успешно зарегистрировались\n"
-                                   f"{address}\n\n"
-                                   f"По указанному адресу вы сможете забрать свой подарок, а также получить полезную информацию."
-       )
+        return await message.reply(
+            """Вы уже успешно зарегистрированы.
+
+Совсем скоро мы пришлем вам развивающие материалы для детей, 
+доступные для мгновенного скачивания.""",
+        )
 
     logging.debug(f"User {message.from_user.id} Start conversation")
     await message.reply(
@@ -34,5 +38,7 @@ async def start(message: types.Message, user_service: IUserService, state: FSMCo
         "Это и не только станет приятным дополнением к нашему общению!"
     )
 
-    await message.reply("Для начала дайте согласие на обработку персональных данных", reply_markup=get_personal_data_keyboard())
+    await message.reply(
+        "Для начала дайте согласие на обработку персональных данных",
+        reply_markup=get_personal_data_keyboard())
     await state.set_state(RegistrationStates.personal_data)
