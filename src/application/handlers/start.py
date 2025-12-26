@@ -24,8 +24,7 @@ async def start(message: types.Message, user_service: IUserService,
         return await message.reply(
             """Вы уже успешно зарегистрированы.
 
-Совсем скоро мы пришлем вам развивающие материалы для детей, 
-доступные для мгновенного скачивания.""",
+Совсем скоро мы пришлем вам развивающие материалы для детей, доступные для мгновенного скачивания.""",
         )
 
     logging.debug(f"User {message.from_user.id} Start conversation")
